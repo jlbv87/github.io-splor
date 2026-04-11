@@ -648,7 +648,7 @@ async function camiSpeak(userMsg){
   }
   var msgs = S.history.length===0 ? [{role:'user',content:'Hola'}] : S.history;
   try{
-    var r = await fetch('https://api.anthropic.com/v1/messages',{
+    var r = await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:CAMI_SYS,messages:msgs})
     });
@@ -723,7 +723,7 @@ async function generateResults(){
   var gradesCtx = S.gradesResult ? '\n\nANALISIS DE NOTAS: Cursos fuertes: '+S.gradesResult.cursos_fuertes.join(', ')+'. Alineacion: '+S.gradesResult.alineacion+'. '+S.gradesResult.conclusion : '';
   var prompt='Analiza esta conversacion de orientacion vocacional con un joven de 15-18 anos y devuelve SOLO JSON puro.\n\nRespuestas:\n'+transcript+gradesCtx+'\n\nSi el usuario menciono cursos donde le va bien o mal, incluyelos en cursos_fuertes/debiles.\n\n{"nombre":"nombre o Explorador","resumen":"2 oraciones especificas del perfil","rasgos":["r1","r2","r3","r4","r5"],"valores":["v1","v2","v3"],"fortalezas":["f1","f2","f3"],"colegio":"nombre del colegio si lo menciono o vacio","cursos_fuertes":[],"cursos_debiles":[],"nota_academica":"","carreras":[{"nombre":"C1","emoji":"emoji","match":94,"area":"Area","motivo":"razon concreta"},{"nombre":"C2","emoji":"emoji","match":87,"area":"Area","motivo":"razon"},{"nombre":"C3","emoji":"emoji","match":79,"area":"Area","motivo":"razon"},{"nombre":"C4","emoji":"emoji","match":71,"area":"Area","motivo":"razon"},{"nombre":"C5","emoji":"emoji","match":63,"area":"Area","motivo":"razon"}],"mercado":{"salario":"S/ 2,500-5,000/mes","empleabilidad":"88%","tendencia":"Creciendo","skill":"habilidad clave"}}';
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
+    var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
@@ -1238,7 +1238,7 @@ async function startSim(career,emoji,area){
   document.getElementById('sim-body').innerHTML='<div class="sim-loading"><div class="spinner"></div><p>Creando tu simulación…</p></div>';
   var prompt='Crea una simulacion inmersiva de un dia como '+career+' (area: '+area+') para un joven de 16 anos. Devuelve SOLO JSON puro:\n{"momentos":[{"hora":"8:00 AM","titulo":"titulo","emoji":"emoji","narrativa":"2-3 oraciones vividas y especificas","decision":"decision real","opciones":["A concreta","B diferente","C distinta"]},{"hora":"11:00 AM","titulo":"titulo","emoji":"emoji","narrativa":"...","decision":"...","opciones":["...","...","..."]},{"hora":"3:00 PM","titulo":"titulo","emoji":"emoji","narrativa":"...","decision":"...","opciones":["...","...","..."]},{"hora":"7:00 PM","titulo":"Reflexion final","emoji":"🌙","narrativa":"como termina el dia","decision":"Como te sentiste en este dia?","opciones":["Me encanto, es lo que quiero","Interesante pero no del todo","No era lo que esperaba"]}]}';
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
+    var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
@@ -1367,7 +1367,7 @@ async function analyzeGrades(){
     :{type:'document',source:{type:'base64',media_type:'application/pdf',data:_gradesFileData}};
   var profileCtx=S.profile?'Perfil vocacional del alumno: '+JSON.stringify({rasgos:S.profile.rasgos,carreras:S.profile.carreras?S.profile.carreras.map(function(c){return c.nombre;}):[]}):'' ;
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
+    var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',max_tokens:1000,
@@ -1534,7 +1534,7 @@ async function sendQA(pid){
   thread.scrollTop=thread.scrollHeight;
   var sys='Eres '+p.name+', '+p.role+' con '+p.years+' anos de experiencia. '+p.bio+' Contexto: '+p.video.transcript.map(function(t){return t.txt;}).join(' ')+' Responde preguntas de jovenes de 15-18 anos. Max 3 oraciones. Espanol latinoamericano informal. Desde tu experiencia real.';
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});
+    var r=await fetch('/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});
     var d=await r.json();
     var reply=(d.content||[]).map(function(b){return b.text||'';}).join('')||'Disculpa, no pude responder ahora.';
     document.getElementById(tyId)&&document.getElementById(tyId).remove();
