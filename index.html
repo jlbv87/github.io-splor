@@ -650,7 +650,7 @@ async function camiSpeak(userMsg){
   try{
     var r = await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:CAMI_SYS,messages:msgs})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:1000,system:CAMI_SYS,messages:msgs})
     });
     var d = await r.json();
     var reply = (d.content||[]).map(function(b){return b.text||'';}).join('') || 'Ups, algo fallo. Intenta de nuevo.';
@@ -725,7 +725,7 @@ async function generateResults(){
   try{
     var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
     var d=await r.json();
     var raw=(d.content||[]).map(function(b){return b.text||'';}).join('');
@@ -1240,7 +1240,7 @@ async function startSim(career,emoji,area){
   try{
     var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
     var d=await r.json();
     var raw=(d.content||[]).map(function(b){return b.text||'';}).join('');
@@ -1370,7 +1370,7 @@ async function analyzeGrades(){
     var r=await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-5',max_tokens:1000,
+        model:'claude-sonnet-4-5-20251001',max_tokens:1000,
         messages:[{role:'user',content:[
           contentBlock,
           {type:'text',text:'Certificado de notas de un estudiante de secundaria peruano. '+profileCtx+'\n\nExtrae cursos y notas, identifica los 3 cursos con mejores notas y los de menor rendimiento, analiza alineacion con perfil vocacional.\n\nDevuelve JSON puro:\n{"cursos_extraidos":[{"nombre":"Matematica","nota":"17"}],"cursos_fuertes":["Arte","Comunicacion"],"cursos_debiles":["Fisica"],"alineacion":"alta","conclusion":"2 oraciones analizando alineacion entre notas y perfil","recomendacion":"1 oracion concreta"}'}
@@ -1534,7 +1534,7 @@ async function sendQA(pid){
   thread.scrollTop=thread.scrollHeight;
   var sys='Eres '+p.name+', '+p.role+' con '+p.years+' anos de experiencia. '+p.bio+' Contexto: '+p.video.transcript.map(function(t){return t.txt;}).join(' ')+' Responde preguntas de jovenes de 15-18 anos. Max 3 oraciones. Espanol latinoamericano informal. Desde tu experiencia real.';
   try{
-    var r=await fetch('/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});
+    var r=await fetch('/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});
     var d=await r.json();
     var reply=(d.content||[]).map(function(b){return b.text||'';}).join('')||'Disculpa, no pude responder ahora.';
     document.getElementById(tyId)&&document.getElementById(tyId).remove();
