@@ -3,15 +3,31 @@ exports.handler = async function(event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'API key not configured' })
+    };
+  }
+
   try {
+    const body = JSON.parse(event.body);
+
+    // Force correct model
+    body.model = 'claude-haiku-4-5-20251001';
+    body.max_tokens = body.max_tokens || 1000;
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey.trim(),
         'anthropic-version': '2023-06-01'
       },
-      body: event.body
+      body: JSON.stringify(body)
     });
 
     const data = await response.json();
@@ -27,6 +43,7 @@ exports.handler = async function(event) {
   } catch (err) {
     return {
       statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: err.message })
     };
   }
