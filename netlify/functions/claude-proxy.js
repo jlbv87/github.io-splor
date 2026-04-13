@@ -15,9 +15,7 @@ exports.handler = async function(event) {
 
   try {
     const body = JSON.parse(event.body);
-
-    // Force correct model
-    body.model = 'claude-haiku-4-5-20251001';
+    body.model = 'claude-haiku-4-5';
     body.max_tokens = body.max_tokens || 1000;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -30,7 +28,9 @@ exports.handler = async function(event) {
       body: JSON.stringify(body)
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    console.log('Anthropic status:', response.status);
+    console.log('Anthropic response:', text);
 
     return {
       statusCode: response.status,
@@ -38,9 +38,10 @@ exports.handler = async function(event) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify(data)
+      body: text
     };
   } catch (err) {
+    console.log('Error:', err.message);
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
