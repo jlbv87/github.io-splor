@@ -12,8 +12,8 @@
   --yellow:#f9c74f;--cream:#f5f0e8;--ink:#0d1f17;--mid:#4a5568;--white:#ffffff;
 }
 html{scroll-behavior:smooth}
-body{font-family:Instrument Sans,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden}
-.screen{display:none;min-height:100vh;flex-direction:column}
+body{font-family:Instrument Sans,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;min-height:100dvh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;min-height:100dvh;flex-direction:column}
 .screen.active{display:flex}
 @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes msgPop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -616,7 +616,7 @@ REGLAS:
   2. En que actividades se sienten buenos de verdad
   3. Como son como persona: solo vs equipo, creativo vs analitico, etc.
   4. Que los frustra o no les gusta hacer
-  5. Que cursos del colegio les gustan MAS y cuales menos. Pregunta algo como: hay algun curso en el que te destaquas o que realmente disfrutas?
+  5. Que cursos del colegio les gustan MAS y cuales menos. Pregunta algo como: hay algun curso en el que te destacas o que realmente disfrutas?
   6. Si mencionan cursos, profundiza: por que les gusta ese curso?
   7. Pregunta tambien en que colegio estudia actualmente, esto ayuda a conocer opciones y costos universitarios.
   8. Que admiran en otras personas o profesiones
@@ -632,12 +632,12 @@ function startChat(){
   document.getElementById('chat-feed').innerHTML='';
   setQuick([]);
   setProgress(0);
-  setSt('Escribiendo\u2026');
+  setSt('Escribiendo…');
   camiSpeak(null);
 }
 
 async function camiSpeak(userMsg){
-  setSt('Escribiendo\u2026');
+  setSt('Escribiendo…');
   showTyping();
   if(userMsg){
     S.history.push({role:'user',content:userMsg});
@@ -657,10 +657,10 @@ async function camiSpeak(userMsg){
     hideTyping();
     addMsg('ai',reply);
     S.history.push({role:'assistant',content:reply});
-    setSt('En linea \u00b7 guia vocacional IA');
+    setSt('En linea · guia vocacional IA');
     var low = reply.toLowerCase();
     if(S.count>=6 && (low.includes('boton verde')||low.includes('listo')||low.includes('ya tengo')||low.includes('haz clic'))){
-      setQuick([{label:'\u2726 Ver mi perfil vocacional',fn:function(){generateResults();}}]);
+      setQuick([{label:'✦ Ver mi perfil vocacional',fn:function(){generateResults();}}]);
     } else {
       setQuick([]);
     }
@@ -688,7 +688,7 @@ function addMsg(role,text){
   var d=document.createElement('div');
   d.className='msg '+role;
   if(role==='ai'){
-    d.innerHTML='<div class="msg-av">\uD83C\uDF31</div><div class="bubble">'+text.replace(/\n/g,'<br>')+'</div>';
+    d.innerHTML='<div class="msg-av">🌱</div><div class="bubble">'+text.replace(/\n/g,'<br>')+'</div>';
   } else {
     d.innerHTML='<div class="bubble">'+text+'</div>';
   }
@@ -699,7 +699,7 @@ function showTyping(){
   var feed=document.getElementById('chat-feed');
   tyEl=document.createElement('div');
   tyEl.className='msg ai';
-  tyEl.innerHTML='<div class="msg-av">\uD83C\uDF31</div><div class="bubble" style="padding:6px 10px"><div class="typing-wrap"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
+  tyEl.innerHTML='<div class="msg-av">🌱</div><div class="bubble" style="padding:6px 10px"><div class="typing-wrap"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
   feed.appendChild(tyEl);feed.scrollTop=feed.scrollHeight;
 }
 function hideTyping(){if(tyEl){tyEl.remove();tyEl=null;}}
@@ -718,7 +718,7 @@ function setQuick(opts){
 // ── RESULTS ──
 async function generateResults(){
   go('s-results');
-  document.getElementById('res-content').innerHTML='<div style="text-align:center;padding:80px 0;color:var(--mid)"><div class="spinner" style="margin:0 auto 16px"></div><p>Cami esta analizando tu perfil\u2026</p></div>';
+  document.getElementById('res-content').innerHTML='<div style="text-align:center;padding:80px 0;color:var(--mid)"><div class="spinner" style="margin:0 auto 16px"></div><p>Cami esta analizando tu perfil…</p></div>';
   var transcript=S.answers.join('\n');
   var gradesCtx = S.gradesResult ? '\n\nANALISIS DE NOTAS: Cursos fuertes: '+S.gradesResult.cursos_fuertes.join(', ')+'. Alineacion: '+S.gradesResult.alineacion+'. '+S.gradesResult.conclusion : '';
   var prompt='Analiza esta conversacion de orientacion vocacional con un joven de 15-18 anos y devuelve SOLO JSON puro.\n\nRespuestas:\n'+transcript+gradesCtx+'\n\nSi el usuario menciono cursos donde le va bien o mal, incluyelos en cursos_fuertes/debiles.\n\n{"nombre":"nombre o Explorador","resumen":"2 oraciones especificas del perfil","rasgos":["r1","r2","r3","r4","r5"],"valores":["v1","v2","v3"],"fortalezas":["f1","f2","f3"],"colegio":"nombre del colegio si lo menciono o vacio","cursos_fuertes":[],"cursos_debiles":[],"nota_academica":"","carreras":[{"nombre":"C1","emoji":"emoji","match":94,"area":"Area","motivo":"razon concreta"},{"nombre":"C2","emoji":"emoji","match":87,"area":"Area","motivo":"razon"},{"nombre":"C3","emoji":"emoji","match":79,"area":"Area","motivo":"razon"},{"nombre":"C4","emoji":"emoji","match":71,"area":"Area","motivo":"razon"},{"nombre":"C5","emoji":"emoji","match":63,"area":"Area","motivo":"razon"}],"mercado":{"salario":"S/ 2,500-5,000/mes","empleabilidad":"88%","tendencia":"Creciendo","skill":"habilidad clave"}}';
@@ -1078,15 +1078,12 @@ function openLead(instId,career){
 }
 
 function submitLead(instId,career){
-  // Allow calling from modal confirm button too
   if(!instId){
     var box=document.querySelector('#lead-modal .modal-box');
     if(box){ instId=box.dataset.inst; career=box.dataset.career; }
   }
   var name=document.getElementById('lead-name')&&document.getElementById('lead-name').value.trim();
   var email=document.getElementById('lead-email')&&document.getElementById('lead-email').value.trim();
-  var school=document.getElementById('lead-school')&&document.getElementById('lead-school').value.trim();
-  var wantsBeca=document.getElementById('lead-beca')&&document.getElementById('lead-beca').checked;
   var school=document.getElementById('lead-school')&&document.getElementById('lead-school').value.trim();
   var wantsBeca=document.getElementById('lead-beca')&&document.getElementById('lead-beca').checked;
   if(!name||!email){
@@ -1099,7 +1096,7 @@ function submitLead(instId,career){
   if(!box) return;
   box.innerHTML=
     '<div style="text-align:center;padding:20px 0">'
-      +'<div style="font-size:52px;margin-bottom:14px">\uD83C\uDF89</div>'
+      +'<div style="font-size:52px;margin-bottom:14px">🎉</div>'
       +'<h3 style="font-family:\'Syne\',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px">¡Solicitud enviada!</h3>'
       +'<p style="font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:24px">'+inst.name+' recibió tu perfil vocacional'+(school?' como estudiante de <strong>'+school+'</strong>':'')+(wantsBeca?' — con interés en becas':'')+'. Se comunicará contigo pronto.<br>Revisa tu correo <strong>'+email+'</strong></p>'
       +'<button class="cta-main-dark" onclick="document.getElementById(\'lead-modal\').remove()">Entendido</button>'
@@ -1115,16 +1112,16 @@ function openDash(){
   var pct=33;
   var offset=circ-(pct/100)*circ;
   var items=[
-    {label:'Test con Cami',icon:'\uD83D\uDCAC',done:true},
-    {label:'Perfil vocacional',icon:'\uD83C\uDFAF',done:true},
+    {label:'Test con Cami',icon:'💬',done:true},
+    {label:'Perfil vocacional',icon:'🎯',done:true},
     {label:'Simular '+p.carreras[0].nombre,icon:p.carreras[0].emoji,done:false},
     {label:'Simular '+p.carreras[1].nombre,icon:p.carreras[1].emoji,done:false},
-    {label:'Ver un profesional',icon:'\uD83C\uDF99\uFE0F',done:false},
-    {label:'Descargar PDF',icon:'\uD83D\uDCC4',done:false}
+    {label:'Ver un profesional',icon:'🎙️',done:false},
+    {label:'Descargar PDF',icon:'📄',done:false}
   ];
   document.getElementById('dash-body').innerHTML=
     '<div class="dash-card" style="animation-delay:.05s">'
-      +'<h3>\uD83D\uDCC8 Tu progreso</h3>'
+      +'<h3>📈 Tu progreso</h3>'
       +'<div class="score-wrap">'
         +'<div class="score-ring">'
           +'<svg width="88" height="88" viewBox="0 0 88 88">'
@@ -1137,7 +1134,7 @@ function openDash(){
       +'</div>'
     +'</div>'
     +'<div class="dash-card" style="animation-delay:.1s">'
-      +'<h3>\uD83D\uDDC2\uFE0F Tu camino</h3>'
+      +'<h3>🗂️ Tu camino</h3>'
       +'<div class="explore-grid">'
         +items.map(function(it){
           return '<div class="explore-item'+(it.done?' done':'')+'">'
@@ -1149,7 +1146,7 @@ function openDash(){
       +'</div>'
     +'</div>'
     +'<div class="dash-card" style="animation-delay:.15s">'
-      +'<h3>\uD83D\uDE80 Tus carreras top</h3>'
+      +'<h3>🚀 Tus carreras top</h3>'
       +p.carreras.slice(0,3).map(function(c,i){
         return '<div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1.5px solid rgba(0,0,0,.06);margin-bottom:8px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--g3)\'" onmouseout="this.style.borderColor=\'rgba(0,0,0,.06)\'" onclick="startSim(\''+esc(c.nombre)+'\',\''+c.emoji+'\',\''+esc(c.area)+'\')">'
           +'<div style="font-size:26px">'+c.emoji+'</div>'
@@ -1160,8 +1157,8 @@ function openDash(){
     +'</div>'
     +'<div style="display:flex;gap:12px;flex-wrap:wrap;padding-bottom:16px">'
       +'<button class="cta-main-dark" onclick="go(\'s-results\')">← Ver perfil completo</button>'
-      +'<button class="pdf-btn" onclick="generatePDF()">\uD83D\uDCC4 Descargar PDF</button>'
-      +'<button class="cta-ghost" onclick="go(\'s-pros\')">\uD83C\uDF99\uFE0F Ver profesionales</button>'
+      +'<button class="pdf-btn" onclick="generatePDF()">📄 Descargar PDF</button>'
+      +'<button class="cta-ghost" onclick="go(\'s-pros\')">🎙️ Ver profesionales</button>'
     +'</div>';
   go('s-dash');
   setTimeout(function(){
@@ -1282,7 +1279,7 @@ function pickM(idx,choice){
   } else {
     document.getElementById('momento').innerHTML=
       '<div class="sim-card" style="text-align:center;padding:48px 30px">'
-        +'<div style="font-size:56px;margin-bottom:20px">\uD83C\uDF89</div>'
+        +'<div style="font-size:56px;margin-bottom:20px">🎉</div>'
         +'<h3 style="font-family:\'Syne\',sans-serif;font-size:26px;font-weight:800;margin-bottom:12px">¡Simulación completada!</h3>'
         +'<p style="color:rgba(255,255,255,.45);margin-bottom:8px;font-size:14px">Tu respuesta:</p>'
         +'<p style="color:var(--g3);font-size:15px;font-weight:600;margin-bottom:32px">'+choice+'</p>'
@@ -1303,12 +1300,12 @@ function openGradesUpload(){
   overlay.innerHTML=
     '<div class="modal-box">'
       +'<div style="text-align:center;margin-bottom:24px">'
-        +'<div style="font-size:48px;margin-bottom:12px">\uD83D\uDCDA</div>'
+        +'<div style="font-size:48px;margin-bottom:12px">📚</div>'
         +'<h2 style="font-family:\'Syne\',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Sube tu libreta de notas</h2>'
         +'<p style="font-size:14px;color:var(--mid);line-height:1.6">Cami analizará tus calificaciones de 4to o 5to de secundaria. Es completamente opcional y privado.</p>'
       +'</div>'
       +'<div class="grades-drop" onclick="document.getElementById(\'grades-file\').click()" ondragover="event.preventDefault();this.style.borderColor=\'var(--g3)\';this.style.background=\'rgba(83,183,136,.08)\'" ondragleave="this.style.borderColor=\'rgba(45,106,79,.3)\';this.style.background=\'rgba(83,183,136,.03)\'" ondrop="handleGradesDrop(event)">'
-        +'<div style="font-size:32px;margin-bottom:10px">\uD83D\uDCC4</div>'
+        +'<div style="font-size:32px;margin-bottom:10px">📄</div>'
         +'<div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px">Arrastra tu archivo aquí</div>'
         +'<div style="font-size:12px;color:var(--mid)">o haz clic para seleccionar</div>'
         +'<div style="font-size:11px;color:var(--mid);margin-top:8px">PDF, JPG o PNG · Máximo 10MB</div>'
@@ -1318,7 +1315,7 @@ function openGradesUpload(){
       +'<div id="grades-status" style="display:none;margin-top:14px"></div>'
       +'<button id="grades-submit" onclick="analyzeGrades()" style="display:none;width:100%;background:var(--g2);color:#fff;border:none;padding:15px;border-radius:12px;font-family:\'Syne\',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px">Analizar mis notas con IA →</button>'
       +'<button onclick="document.getElementById(\'grades-modal\').remove()" style="width:100%;background:none;border:none;color:var(--mid);font-size:13px;cursor:pointer;padding:8px;font-family:\'Instrument Sans\',sans-serif;margin-top:8px">Continuar sin subir notas</button>'
-      +'<p style="font-size:11px;color:var(--mid);text-align:center;margin-top:10px;line-height:1.5">\uD83D\uDD12 Tus notas se procesan al instante y no se almacenan.</p>'
+      +'<p style="font-size:11px;color:var(--mid);text-align:center;margin-top:10px;line-height:1.5">🔒 Tus notas se procesan al instante y no se almacenan.</p>'
     +'</div>';
   document.body.appendChild(overlay);
 }
@@ -1340,7 +1337,7 @@ function processGradesFile(file){
     var sub=document.getElementById('grades-submit');
     if(prev){
       prev.style.display='flex';
-      prev.innerHTML='<div style="display:flex;align-items:center;gap:12px;background:var(--g5);border-radius:12px;padding:14px;width:100%"><span style="font-size:24px">'+(file.type.includes('pdf')?'\uD83D\uDCCB':'\uD83D\uDDBC\uFE0F')+'</span><div><div style="font-size:13px;font-weight:600">'+file.name+'</div><div style="font-size:11px;color:var(--mid)">'+Math.round(file.size/1024)+'KB · Listo</div></div><span style="margin-left:auto;font-size:20px">\u2705</span></div>';
+      prev.innerHTML='<div style="display:flex;align-items:center;gap:12px;background:var(--g5);border-radius:12px;padding:14px;width:100%"><span style="font-size:24px">'+(file.type.includes('pdf')?'📋':'🖼️')+'</span><div><div style="font-size:13px;font-weight:600">'+file.name+'</div><div style="font-size:11px;color:var(--mid)">'+Math.round(file.size/1024)+'KB · Listo</div></div><span style="margin-left:auto;font-size:20px">✅</span></div>';
     }
     if(sub) sub.style.display='block';
   };
@@ -1353,15 +1350,15 @@ function showGradesSt(type,msg){
   el.style.display='block';
   var bg=type==='error'?'#fee2e2':type==='loading'?'rgba(83,183,136,.1)':'var(--g5)';
   var color=type==='error'?'#dc2626':'var(--g2)';
-  var icon=type==='error'?'\u274C':type==='loading'?'\u23F3':'\u2705';
+  var icon=type==='error'?'❌':type==='loading'?'⏳':'✅';
   el.innerHTML='<div style="background:'+bg+';border-radius:12px;padding:14px;font-size:13px;color:'+color+';display:flex;align-items:center;gap:10px">'+icon+' '+msg+'</div>';
 }
 
 async function analyzeGrades(){
   if(!_gradesFileData){showGradesSt('error','No hay archivo cargado.');return;}
   var sub=document.getElementById('grades-submit');
-  if(sub){sub.disabled=true;sub.textContent='Analizando\u2026';}
-  showGradesSt('loading','Cami está leyendo tus notas\u2026');
+  if(sub){sub.disabled=true;sub.textContent='Analizando…';}
+  showGradesSt('loading','Cami está leyendo tus notas…');
   var contentBlock=_gradesFileType.startsWith('image/')
     ?{type:'image',source:{type:'base64',media_type:_gradesFileType,data:_gradesFileData}}
     :{type:'document',source:{type:'base64',media_type:'application/pdf',data:_gradesFileData}};
@@ -1398,13 +1395,13 @@ function showGradesSuccess(r){
   var aCol=r.alineacion==='alta'?'var(--g2)':r.alineacion==='media'?'#d97706':'#dc2626';
   var aLbl=r.alineacion==='alta'?'✦ Alta alineación':r.alineacion==='media'?'~ Alineación media':'△ Alineación baja';
   box.innerHTML=
-    '<div style="text-align:center;margin-bottom:20px"><div style="font-size:48px;margin-bottom:12px">\uD83C\uDF93</div><h2 style="font-family:\'Syne\',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px">Notas analizadas</h2><div style="display:inline-block;background:'+aCol+';color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:999px">'+aLbl+' con tu perfil</div></div>'
+    '<div style="text-align:center;margin-bottom:20px"><div style="font-size:48px;margin-bottom:12px">🎓</div><h2 style="font-family:\'Syne\',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px">Notas analizadas</h2><div style="display:inline-block;background:'+aCol+';color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:999px">'+aLbl+' con tu perfil</div></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">'
       +'<div style="background:var(--g5);border-radius:14px;padding:14px"><div style="font-size:11px;font-weight:700;color:var(--g2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">✦ Cursos fuertes</div>'+r.cursos_fuertes.map(function(c){return '<div style="font-size:13px;padding:3px 0">'+c+'</div>';}).join('')+'</div>'
       +(r.cursos_debiles&&r.cursos_debiles.length>0?'<div style="background:#fff8f5;border-radius:14px;padding:14px"><div style="font-size:11px;font-weight:700;color:#c05621;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">△ Áreas de esfuerzo</div>'+r.cursos_debiles.map(function(c){return '<div style="font-size:13px;padding:3px 0">'+c+'</div>';}).join('')+'</div>':'')
     +'</div>'
     +'<div style="background:rgba(83,183,136,.07);border-left:3px solid var(--g3);border-radius:0 10px 10px 0;padding:14px;margin-bottom:16px;font-size:13px;color:var(--mid);line-height:1.7">'+r.conclusion+'</div>'
-    +(r.recomendacion?'<div style="background:var(--cream);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:16px">\uD83D\uDCA1 '+r.recomendacion+'</div>':'')
+    +(r.recomendacion?'<div style="background:var(--cream);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:16px">💡 '+r.recomendacion+'</div>':'')
     +'<button onclick="applyGrades()" style="width:100%;background:var(--g2);color:#fff;border:none;padding:14px;border-radius:12px;font-family:\'Syne\',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px">Actualizar mi perfil con estas notas →</button>'
     +'<button onclick="document.getElementById(\'grades-modal\').remove()" style="width:100%;background:none;border:none;color:var(--mid);font-size:13px;cursor:pointer;padding:8px;font-family:\'Instrument Sans\',sans-serif">Cerrar</button>';
 }
@@ -1419,13 +1416,17 @@ function applyGrades(){
 }
 
 // ── PROS ──
+// Principio de contenido para cada perfil: no solo lo bonito. Cada bio y video debe incluir
+// 1) un logro o pasion genuina, 2) una dificultad estructural real del dia a dia (horarios,
+// desgaste, burocracia), y 3) un error o fracaso especifico y como se supero. El arco es
+// lucha -> sentido, no solo victoria. Aplica a perfiles nuevos, reales o simulados.
 const PROS_DATA=[
-  {id:'p1',name:'Andrea Salinas',role:'UX Designer Senior',area:'tecnologia',years:6,city:'Lima',emoji:'👩🏻',grad:'Diseño Grafico · PUCP',cover:'linear-gradient(135deg,#1a3d2b,#2d6a4f)',bio:'Diseño experiencias digitales para productos financieros usados por millones de personas. Antes pensaba que diseñar era solo hacer cosas bonitas — me equivocaba completamente.',tags:['Diseño UX','Figma','Investigacion'],tagColors:['','','yell'],video:{title:'Mi dia a dia como UX Designer',duration:'9 min',emoji:'🎨',bg:'linear-gradient(135deg,#1a3d2b,#52b788)',chapters:[{t:'0:00',txt:'Como arranca mi mañana'},{t:'1:45',txt:'La reunion de discovery con producto'},{t:'3:30',txt:'Cuando un diseño no funciona'},{t:'6:00',txt:'Lo que nadie te dice antes de entrar'},{t:'7:40',txt:'Vale la pena? Mi reflexion honesta'}],transcript:[{t:'0:00',txt:'Arranque el dia revisando feedback de una prueba de usuario de ayer. Eso es lo primero que hago — antes del cafe. Habia 6 grabaciones de 20 minutos y mi trabajo es encontrar los patrones.'},{t:'1:45',txt:'A las 9:30 tuvimos discovery con producto. El PM llego con una idea nueva. Mi rol ahi no es diseñar — es hacer las preguntas incomodas. Para quien? Que problema resuelve? A veces eso genera friccion. Aprendi a convivir con eso.'},{t:'3:30',txt:'A la 1 PM testee un flujo con 4 usuarios reales. El tercero se perdio en el paso 2 de 5. Ese momento siempre duele un poco — llevaba 3 dias en ese diseño. Pero eso es exactamente para lo que existe este trabajo.'},{t:'6:00',txt:'Lo que nadie te dice: esta carrera es 30% diseño visual y 70% conversaciones, argumentaciones y negociaciones. Necesitas defender tus decisiones con data.'},{t:'7:40',txt:'Vale la pena? Completamente. Pero no porque sea glamorosa — vale la pena porque ves el impacto directo de tu trabajo en personas reales.'}]},suggested:['Que aprenderia diferente si volviera a la universidad?','Cuanto tiempo tardaste en tu primer trabajo de UX?','Se puede trabajar como freelance en esta area?']},
-  {id:'p2',name:'Diego Herrera',role:'Medico Residente',area:'salud',years:4,city:'Lima',emoji:'👨🏽‍⚕️',grad:'Medicina Humana · UNMSM',cover:'linear-gradient(135deg,#1e3a5f,#2563eb)',bio:'Estoy en residencia de medicina interna. Soy el primero en mi familia en ser medico. Te cuento lo que es esto de verdad, sin el filtro de las series de television.',tags:['Medicina Interna','Residencia','Urgencias'],tagColors:['','yell',''],video:{title:'Una guardia de 30 horas en el hospital',duration:'11 min',emoji:'🏥',bg:'linear-gradient(135deg,#1e3a5f,#3b82f6)',chapters:[{t:'0:00',txt:'Como es llegar a una guardia de 30 horas'},{t:'2:10',txt:'La primera emergencia de la noche'},{t:'4:30',txt:'Las 3 AM: cansancio y decisiones'},{t:'7:00',txt:'Lo que mas me pesa y lo que mas me llena'},{t:'9:20',txt:'Volveria a elegir medicina?'}],transcript:[{t:'0:00',txt:'Entre a guardia a las 7 AM del martes y sali a la 1 PM del miercoles. Eso es una guardia normal en residencia. Antes de entrar: ropa limpia, comida para la noche, audifonos para los momentos quietos que casi nunca llegan.'},{t:'2:10',txt:'A las 11 PM llego una paciente con dificultad para respirar. En ese momento activas un modo diferente: todo lo que estudiaste en 7 anos se activa de golpe. No hay tiempo para dudar.'},{t:'4:30',txt:'A las 3 AM es cuando los residentes descubrimos que tan fuertes somos de verdad. Llevas 20 horas sin dormir, tomando decisiones que afectan la vida de alguien.'},{t:'7:00',txt:'Lo que mas me pesa: el sistema, la falta de recursos. Lo que mas me llena: el momento en que alguien mejora y lo ves en sus ojos.'},{t:'9:20',txt:'Volveria a elegir medicina? Si. Pero lo haria sabiendo que no es lo que muestran en las series. Es mas dificil, mas agotador — y tambien mas significativo.'}]},suggested:['Cuantos anos son en total hasta ser especialista?','Como manejas el desgaste emocional?','Que especialidad elegirias y por que?']},
-  {id:'p3',name:'Sofia Mendez',role:'Periodista Digital',area:'comunicacion',years:5,city:'Bogota',emoji:'👩🏼',grad:'Comunicacion Social · Javeriana',cover:'linear-gradient(135deg,#4a1942,#c026d3)',bio:'Cuento historias que importan. Trabajo en un medio digital independiente enfocado en investigacion.',tags:['Periodismo','Investigacion','Video'],tagColors:['','yell',''],video:{title:'Como investigo una historia de alto impacto',duration:'8 min',emoji:'📰',bg:'linear-gradient(135deg,#4a1942,#c026d3)',chapters:[{t:'0:00',txt:'Como nace una investigacion periodistica'},{t:'1:50',txt:'El proceso real: fuentes y verificacion'},{t:'4:10',txt:'Cuando la historia te incomoda a ti mismo'},{t:'6:00',txt:'El periodismo digital vs el tradicional'}],transcript:[{t:'0:00',txt:'Una investigacion puede empezar con una llamada anonima, un documento filtrado, o una pregunta que no encuentras respondida en ningun lado. Esta semana empezo con un dato que no cerraba en un informe publico.'},{t:'1:50',txt:'El proceso es mayoritariamente aburrido: leer documentos, cruzar datos, llamar a fuentes que no quieren hablar, esperar respuestas que no llegan. La paciencia es la habilidad mas importante.'},{t:'4:10',txt:'Hay historias que descubres y ojala no hubiera que publicarlas — no porque sean falsas, sino porque el impacto en personas reales es muy grande. Eso te obliga a hacerte preguntas eticas reales.'},{t:'6:00',txt:'El periodismo digital te da herramientas increibles pero tambien presion constante por el trafico. El desafio es no dejar que las metricas dicten que historias cuentas.'}]},suggested:['Se puede vivir economicamente del periodismo hoy?','Que tan importante es saber hacer video y edicion?','Como es trabajar en un medio independiente vs uno grande?']},
-  {id:'p4',name:'Mateo Quispe',role:'Ingeniero de Software',area:'tecnologia',years:3,city:'Lima',emoji:'👨🏽',grad:'Ingenieria de Sistemas · UNI',cover:'linear-gradient(135deg,#0f2027,#2c5364)',bio:'Construyo el backend de aplicaciones que usan miles de personas. Entre a sistemas sin saber bien que era — y encontre exactamente lo que buscaba.',tags:['Backend','Python','Arquitectura'],tagColors:['','yell',''],video:{title:'Lo que nadie te dice sobre ser developer',duration:'7 min',emoji:'💻',bg:'linear-gradient(135deg,#0f2027,#2c5364)',chapters:[{t:'0:00',txt:'Un dia tipico: reuniones y codigo'},{t:'2:00',txt:'El bug que me tuvo 2 dias sin dormir'},{t:'4:30',txt:'Lo que mas me sorprendio de este trabajo'},{t:'6:00',txt:'Consejos si estas pensando en sistemas'}],transcript:[{t:'0:00',txt:'Mi dia empieza con el standup del equipo: 15 minutos donde cada uno dice que hizo ayer y que hara hoy. Despues de eso, codigo. En promedio escribo 4-5 horas de codigo al dia. El resto son reuniones y revisiones.'},{t:'2:00',txt:'La semana pasada tuve un bug en produccion que afectaba a usuarios reales. Tarde 2 dias en encontrarlo. Cuando lo encontre senti una adrenalina dificil de describir.'},{t:'4:30',txt:'Lo que mas me sorprendio: la cantidad de comunicacion que implica este trabajo. Coordino con diseño, producto, infraestructura. Saber explicar ideas tecnicas a personas no tecnicas es tan importante como programar.'},{t:'6:00',txt:'Si estas pensando en sistemas: no necesitas ser un genio de las matematicas. Necesitas ser curioso y tolerar la frustracion. El lenguaje se aprende; la mentalidad de resolver problemas, eso es lo que importa.'}]},suggested:['Que lenguajes de programacion recomiendas aprender primero?','Es necesario hacer una maestria para crecer?','Como es el trabajo remoto en tecnologia?']},
-  {id:'p5',name:'Valeria Torres',role:'Psicologa Organizacional',area:'ciencias',years:7,city:'Santiago',emoji:'👩🏻‍💼',grad:'Psicologia · U. de Chile',cover:'linear-gradient(135deg,#2d1b69,#9333ea)',bio:'Ayudo a empresas a que sus equipos funcionen mejor. Mi trabajo esta en la interseccion entre las personas y los negocios.',tags:['Psicologia Org.','RRHH','Consultoria'],tagColors:['','','yell'],video:{title:'Que hace realmente un psicologo organizacional',duration:'8 min',emoji:'🧠',bg:'linear-gradient(135deg,#2d1b69,#9333ea)',chapters:[{t:'0:00',txt:'Por que elegi la rama organizacional y no clinica'},{t:'1:30',txt:'Un proceso de seleccion real'},{t:'3:45',txt:'Cuando los datos de cultura revelan algo incomodo'},{t:'6:10',txt:'Lo que mas me gusta y lo mas dificil'}],transcript:[{t:'0:00',txt:'Mucha gente cree que psicologia es terapia. Es valido, pero es solo una rama. Yo elegi la organizacional porque queria impacto a escala. Un buen proceso de seleccion puede cambiar la vida de cientos de personas.'},{t:'1:30',txt:'Esta semana hice un proceso de seleccion para un cargo gerencial. Incluyo entrevistas por competencias, evaluaciones psicometricas y una dinamica grupal. Mi rol es interpretar todo eso y dar una recomendacion fundamentada.'},{t:'3:45',txt:'Una de las partes mas interesantes es el diagnostico de cultura. A veces los datos revelan cosas que la empresa no quiere escuchar. Mi trabajo es decir lo que los datos dicen, aunque no sea lo esperado.'},{t:'6:10',txt:'Lo que mas me gusta: la variedad. No hay dos dias iguales. Lo mas dificil: ser el mensajero de noticias dificiles sabiendo que a veces la empresa no actuara en consecuencia.'}]},suggested:['Que diferencia hay entre psicologia clinica y organizacional en el mercado?','Se necesita maestria para trabajar en consultoria?','Como es el dia a dia en terminos de horarios?']},
-  {id:'p6',name:'Carlos Espinoza',role:'Emprendedor / CEO',area:'negocios',years:8,city:'Lima',emoji:'👨🏽‍💻',grad:'Administracion · ESAN',cover:'linear-gradient(135deg,#1a3d2b,#f9c74f)',bio:'Funde mi segunda startup a los 28. La primera fracaso. Te cuento todo — incluyendo lo que no te cuentan los casos de exito.',tags:['Startup','Emprendimiento','Inversion'],tagColors:['','yell',''],video:{title:'Lo que nadie te dice del emprendimiento',duration:'10 min',emoji:'🚀',bg:'linear-gradient(135deg,#1a3d2b,#f9c74f)',chapters:[{t:'0:00',txt:'Por que fracaso mi primera empresa'},{t:'2:30',txt:'Como es un dia cuando todo sale mal'},{t:'5:00',txt:'Levantar inversion: la parte que no se romanticiza'},{t:'7:30',txt:'Emprendimiento o carrera corporativa?'}],transcript:[{t:'0:00',txt:'Mi primera empresa fracaso porque construimos algo que nosotros queriamos, no algo que el mercado necesitaba. Suena obvio ahora. En ese momento teniamos 24 anos y cero validacion de clientes reales.'},{t:'2:30',txt:'Un dia malo en una startup: el CTO dice que hay un bug critico, un cliente amenaza con irse, y tienes reunion con inversores en 3 horas. Todo al mismo tiempo, siempre. Nadie te prepara para esa densidad emocional.'},{t:'5:00',txt:'Levantar inversion tomo 14 meses, mas de 60 pitches y decenas de rechazos muy educados. Cuando el si llego, lo primero que senti no fue euforia — fue alivio.'},{t:'7:30',txt:'Emprendimiento o corporativo? No hay respuesta correcta. Uno te da libertad y te cobra en incertidumbre. El otro te da estructura y te cobra en autonomia. Prueba ambos antes de decidir.'}]},suggested:['Cuanto dinero necesitas para arrancar una startup?','Es necesario estudiar administracion para emprender?','Como saber si una idea vale la pena perseguir?']}
+  {id:'p1',name:'Andrea Salinas',role:'UX Designer Senior',area:'tecnologia',years:6,city:'Lima',emoji:'👩🏻',grad:'Diseño Grafico · PUCP',cover:'linear-gradient(135deg,#1a3d2b,#2d6a4f)',bio:'Diseño experiencias digitales para productos financieros usados por millones de personas. Antes pensaba que diseñar era solo hacer cosas bonitas — me equivocaba completamente. Hace dos años lancé un rediseño completo que la empresa tuvo que revertir a los 10 dias porque bajaron las conversiones. Fue publico, fue mio, y tuve que presentar en persona por que fallo.',tags:['Diseño UX','Figma','Investigacion'],tagColors:['','','yell'],video:{title:'Mi dia a dia como UX Designer',duration:'9 min',emoji:'🎨',bg:'linear-gradient(135deg,#1a3d2b,#52b788)',chapters:[{t:'0:00',txt:'Como arranca mi mañana'},{t:'1:45',txt:'La reunion de discovery con producto'},{t:'3:30',txt:'Cuando un diseño no funciona'},{t:'6:00',txt:'Lo que nadie te dice antes de entrar'},{t:'7:40',txt:'Vale la pena? Mi reflexion honesta'}],transcript:[{t:'0:00',txt:'Arranque el dia revisando feedback de una prueba de usuario de ayer. Eso es lo primero que hago — antes del cafe. Habia 6 grabaciones de 20 minutos y mi trabajo es encontrar los patrones.'},{t:'1:45',txt:'A las 9:30 tuvimos discovery con producto. El PM llego con una idea nueva. Mi rol ahi no es diseñar — es hacer las preguntas incomodas. Para quien? Que problema resuelve? A veces eso genera friccion. Aprendi a convivir con eso.'},{t:'3:30',txt:'A la 1 PM testee un flujo con 4 usuarios reales. El tercero se perdio en el paso 2 de 5. Ese momento siempre duele un poco — llevaba 3 dias en ese diseño. Me acordé de mi peor error: hace dos años lancé un rediseño completo sin testear lo suficiente con usuarios reales, confiado en que mi criterio bastaba. Bajaron las conversiones y tuvimos que revertirlo a los 10 dias. Tuve que presentar en una reunion con 20 personas por que fallo, siendo yo la responsable. Aprendi que la confianza no reemplaza la evidencia — desde entonces jamas lanzo nada sin testearlo antes.'},{t:'6:00',txt:'Lo que nadie te dice: esta carrera es 30% diseño visual y 70% conversaciones, argumentaciones y negociaciones. Necesitas defender tus decisiones con data.'},{t:'7:40',txt:'Vale la pena? Completamente. Pero no porque sea glamorosa — vale la pena porque ves el impacto directo de tu trabajo en personas reales.'}]},suggested:['Que aprenderia diferente si volviera a la universidad?','Cuanto tiempo tardaste en tu primer trabajo de UX?','Se puede trabajar como freelance en esta area?','Cual fue tu mayor error o fracaso en este trabajo, y que aprendiste?']},
+  {id:'p2',name:'Diego Herrera',role:'Medico Residente',area:'salud',years:4,city:'Lima',emoji:'👨🏽‍⚕️',grad:'Medicina Humana · UNMSM',cover:'linear-gradient(135deg,#1e3a5f,#2563eb)',bio:'Estoy en residencia de medicina interna. Soy el primero en mi familia en ser medico. Te cuento lo que es esto de verdad, sin el filtro de las series de television. En mi primer año de residencia, agotado tras 20 horas de guardia, se me paso un signo de alarma en un paciente — un colega mas experimentado lo detecto a tiempo. No paso a mayores, pero fue el llamado de atencion mas fuerte que he tenido sobre mis propios limites.',tags:['Medicina Interna','Residencia','Urgencias'],tagColors:['','yell',''],video:{title:'Una guardia de 30 horas en el hospital',duration:'11 min',emoji:'🏥',bg:'linear-gradient(135deg,#1e3a5f,#3b82f6)',chapters:[{t:'0:00',txt:'Como es llegar a una guardia de 30 horas'},{t:'2:10',txt:'La primera emergencia de la noche'},{t:'4:30',txt:'Las 3 AM: el error que casi cometo'},{t:'7:00',txt:'Lo que mas me pesa y lo que mas me llena'},{t:'9:20',txt:'Volveria a elegir medicina?'}],transcript:[{t:'0:00',txt:'Entre a guardia a las 7 AM del martes y sali a la 1 PM del miercoles. Eso es una guardia normal en residencia. Antes de entrar: ropa limpia, comida para la noche, audifonos para los momentos quietos que casi nunca llegan.'},{t:'2:10',txt:'A las 11 PM llego una paciente con dificultad para respirar. En ese momento activas un modo diferente: todo lo que estudiaste en 7 anos se activa de golpe. No hay tiempo para dudar.'},{t:'4:30',txt:'A las 3 AM es cuando los residentes descubrimos que tan fuertes somos de verdad. En mi primer año, a esa hora, con 20 horas sin dormir, revise a un paciente y no le di la importancia debida a un signo que en otro momento habria notado de inmediato. Un colega mas experimentado lo reviso despues y si lo detecto. No paso a mayores, pero senti el estomago hundirseme cuando entendi que pudo haber sido grave. Desde ese dia soy mucho mas estricto conmigo mismo: si estoy muy cansado, pido una segunda revision de otro medico, sin excusas ni orgullo.'},{t:'7:00',txt:'Lo que mas me pesa: el sistema, la falta de recursos. Lo que mas me llena: el momento en que alguien mejora y lo ves en sus ojos.'},{t:'9:20',txt:'Volveria a elegir medicina? Si. Pero lo haria sabiendo que no es lo que muestran en las series. Es mas dificil, mas agotador — y tambien mas significativo.'}]},suggested:['Cuantos anos son en total hasta ser especialista?','Como manejas el desgaste emocional?','Que especialidad elegirias y por que?','Cual fue tu mayor error o fracaso en este trabajo, y que aprendiste?']},
+  {id:'p3',name:'Sofia Mendez',role:'Periodista Digital',area:'comunicacion',years:5,city:'Bogota',emoji:'👩🏼',grad:'Comunicacion Social · Javeriana',cover:'linear-gradient(135deg,#4a1942,#c026d3)',bio:'Cuento historias que importan. Trabajo en un medio digital independiente enfocado en investigacion. Publique una nota hace tres años con un dato que no verifique lo suficiente — tuvimos que sacar una correccion publica. Fue humillante, pero cambio para siempre como trabajo.',tags:['Periodismo','Investigacion','Video'],tagColors:['','yell',''],video:{title:'Como investigo una historia de alto impacto',duration:'8 min',emoji:'📰',bg:'linear-gradient(135deg,#4a1942,#c026d3)',chapters:[{t:'0:00',txt:'Como nace una investigacion periodistica'},{t:'1:50',txt:'El proceso real: fuentes y verificacion'},{t:'4:10',txt:'Cuando la historia te incomoda a ti mismo'},{t:'6:00',txt:'El periodismo digital vs el tradicional'}],transcript:[{t:'0:00',txt:'Una investigacion puede empezar con una llamada anonima, un documento filtrado, o una pregunta que no encuentras respondida en ningun lado. Esta semana empezo con un dato que no cerraba en un informe publico.'},{t:'1:50',txt:'El proceso es mayoritariamente aburrido: leer documentos, cruzar datos, llamar a fuentes que no quieren hablar, esperar respuestas que no llegan. La paciencia es la habilidad mas importante.'},{t:'4:10',txt:'Hay historias que descubres y ojala no hubiera que publicarlas — no porque sean falsas, sino porque el impacto en personas reales es muy grande. Eso te obliga a hacerte preguntas eticas reales. Hace tres años publique una nota con un dato que no verifique con suficiente cuidado — una sola fuente, sin cruzarla. Tuvimos que sacar una correccion publica al dia siguiente. Fue humillante, con mi nombre debajo del error para que todos lo vieran. Desde ahi, verifico todo al menos con dos fuentes independientes, sin excepcion.'},{t:'6:00',txt:'El periodismo digital te da herramientas increibles pero tambien presion constante por el trafico. El desafio es no dejar que las metricas dicten que historias cuentas.'}]},suggested:['Se puede vivir economicamente del periodismo hoy?','Que tan importante es saber hacer video y edicion?','Como es trabajar en un medio independiente vs uno grande?','Cual fue tu mayor error o fracaso en este trabajo, y que aprendiste?']},
+  {id:'p4',name:'Mateo Quispe',role:'Ingeniero de Software',area:'tecnologia',years:3,city:'Lima',emoji:'👨🏽',grad:'Ingenieria de Sistemas · UNI',cover:'linear-gradient(135deg,#0f2027,#2c5364)',bio:'Construyo el backend de aplicaciones que usan miles de personas. Entre a sistemas sin saber bien que era — y encontre exactamente lo que buscaba. Hace un año hice un deploy sin probar bien un caso limite y tumbe el sistema de pagos por 40 minutos en horario pico. Fue mi error, se noto, y tuve que escribir el post-mortem yo mismo frente a todo el equipo.',tags:['Backend','Python','Arquitectura'],tagColors:['','yell',''],video:{title:'Lo que nadie te dice sobre ser developer',duration:'7 min',emoji:'💻',bg:'linear-gradient(135deg,#0f2027,#2c5364)',chapters:[{t:'0:00',txt:'Un dia tipico: reuniones y codigo'},{t:'2:00',txt:'El dia que tumbe pagos por mi error'},{t:'4:30',txt:'Lo que mas me sorprendio de este trabajo'},{t:'6:00',txt:'Consejos si estas pensando en sistemas'}],transcript:[{t:'0:00',txt:'Mi dia empieza con el standup del equipo: 15 minutos donde cada uno dice que hizo ayer y que hara hoy. Despues de eso, codigo. En promedio escribo 4-5 horas de codigo al dia. El resto son reuniones y revisiones.'},{t:'2:00',txt:'Hace un año hice un deploy un viernes en la tarde, con confianza de mas, sin probar bien un caso limite. Tumbe el sistema de pagos por 40 minutos justo en horario pico. Vi las alertas explotar y el estomago se me fue al piso. Lo peor no fue arreglarlo — fue escribir el post-mortem al dia siguiente frente a todo el equipo, explicando exactamente que hice mal. Desde entonces jamas hago un deploy grande sin que otra persona revise mi codigo primero, sin excepciones.'},{t:'4:30',txt:'Lo que mas me sorprendio: la cantidad de comunicacion que implica este trabajo. Coordino con diseño, producto, infraestructura. Saber explicar ideas tecnicas a personas no tecnicas es tan importante como programar.'},{t:'6:00',txt:'Si estas pensando en sistemas: no necesitas ser un genio de las matematicas. Necesitas ser curioso y tolerar la frustracion. El lenguaje se aprende; la mentalidad de resolver problemas, eso es lo que importa.'}]},suggested:['Que lenguajes de programacion recomiendas aprender primero?','Es necesario hacer una maestria para crecer?','Como es el trabajo remoto en tecnologia?','Cual fue tu mayor error o fracaso en este trabajo, y que aprendiste?']},
+  {id:'p5',name:'Valeria Torres',role:'Psicologa Organizacional',area:'ciencias',years:7,city:'Santiago',emoji:'👩🏻‍💼',grad:'Psicologia · U. de Chile',cover:'linear-gradient(135deg,#2d1b69,#9333ea)',bio:'Ayudo a empresas a que sus equipos funcionen mejor. Mi trabajo esta en la interseccion entre las personas y los negocios. Al inicio de mi carrera recomende contratar a alguien que resulto ser un mal fit para el equipo — la salida de esa persona a los 4 meses fue en parte mi responsabilidad, y me tomo tiempo aceptarlo sin ponerme a la defensiva.',tags:['Psicologia Org.','RRHH','Consultoria'],tagColors:['','','yell'],video:{title:'Que hace realmente un psicologo organizacional',duration:'8 min',emoji:'🧠',bg:'linear-gradient(135deg,#2d1b69,#9333ea)',chapters:[{t:'0:00',txt:'Por que elegi la rama organizacional y no clinica'},{t:'1:30',txt:'Un proceso de seleccion real'},{t:'3:45',txt:'Cuando los datos de cultura revelan algo incomodo'},{t:'6:10',txt:'Lo que mas me gusta y lo mas dificil'}],transcript:[{t:'0:00',txt:'Mucha gente cree que psicologia es terapia. Es valido, pero es solo una rama. Yo elegi la organizacional porque queria impacto a escala. Un buen proceso de seleccion puede cambiar la vida de cientos de personas.'},{t:'1:30',txt:'Esta semana hice un proceso de seleccion para un cargo gerencial. Incluyo entrevistas por competencias, evaluaciones psicometricas y una dinamica grupal. Mi rol es interpretar todo eso y dar una recomendacion fundamentada.'},{t:'3:45',txt:'Una de las partes mas interesantes es el diagnostico de cultura. A veces los datos revelan cosas que la empresa no quiere escuchar. Mi trabajo es decir lo que los datos dicen, aunque no sea lo esperado.'},{t:'6:10',txt:'Lo que mas me gusta: la variedad. No hay dos dias iguales. Lo mas dificil: ser el mensajero de noticias dificiles sabiendo que a veces la empresa no actuara en consecuencia. Y lo que mas me costo aceptar: al inicio de mi carrera recomende contratar a alguien que resulto un mal fit — se fue a los 4 meses, y parte de esa lectura equivocada fue mia. Me tomo tiempo dejar de justificarme y aceptar que mi evaluacion tambien puede fallar. Ahora reviso mis propios sesgos antes de dar cualquier recomendacion.'}]},suggested:['Que diferencia hay entre psicologia clinica y organizacional en el mercado?','Se necesita maestria para trabajar en consultoria?','Como es el dia a dia en terminos de horarios?','Cual fue tu mayor error o fracaso en este trabajo, y que aprendiste?']},
+  {id:'p6',name:'Carlos Espinoza',role:'Emprendedor / CEO',area:'negocios',years:8,city:'Lima',emoji:'👨🏽‍💻',grad:'Administracion · ESAN',cover:'linear-gradient(135deg,#1a3d2b,#f9c74f)',bio:'Funde mi segunda startup a los 28. La primera fracaso. Te cuento todo — incluyendo lo que no te cuentan los casos de exito.',tags:['Startup','Emprendimiento','Inversion'],tagColors:['','yell',''],video:{title:'Lo que nadie te dice del emprendimiento',duration:'10 min',emoji:'🚀',bg:'linear-gradient(135deg,#1a3d2b,#f9c74f)',chapters:[{t:'0:00',txt:'Por que fracaso mi primera empresa'},{t:'2:30',txt:'Como es un dia cuando todo sale mal'},{t:'5:00',txt:'Levantar inversion: la parte que no se romanticiza'},{t:'7:30',txt:'Emprendimiento o carrera corporativa?'}],transcript:[{t:'0:00',txt:'Mi primera empresa fracaso porque construimos algo que nosotros queriamos, no algo que el mercado necesitaba. Suena obvio ahora. En ese momento teniamos 24 anos y cero validacion de clientes reales.'},{t:'2:30',txt:'Un dia malo en una startup: el CTO dice que hay un bug critico, un cliente amenaza con irse, y tienes reunion con inversores en 3 horas. Todo al mismo tiempo, siempre. Nadie te prepara para esa densidad emocional.'},{t:'5:00',txt:'Levantar inversion tomo 14 meses, mas de 60 pitches y decenas de rechazos muy educados. Cuando el si llego, lo primero que senti no fue euforia — fue alivio.'},{t:'7:30',txt:'Emprendimiento o corporativo? No hay respuesta correcta. Uno te da libertad y te cobra en incertidumbre. El otro te da estructura y te cobra en autonomia. Prueba ambos antes de decidir.'}]},suggested:['Cuanto dinero necesitas para arrancar una startup?','Es necesario estudiar administracion para emprender?','Como saber si una idea vale la pena perseguir?','Que errores sigues cometiendo incluso ahora, con mas experiencia?']}
 ];
 
 function renderPros(filter){
@@ -1612,7 +1613,6 @@ document.addEventListener('click', function(e){
 
 function openShareFeedback(){
   var p = S.profile || demoP();
-  // Encode profile summary as base64 for shareable URL
   var payload = {
     nombre: p.nombre,
     resumen: p.resumen,
